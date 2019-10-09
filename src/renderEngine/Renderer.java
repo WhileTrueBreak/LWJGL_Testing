@@ -1,5 +1,9 @@
 package renderEngine;
 
+import java.nio.IntBuffer;
+
+import org.lwjgl.BufferUtils;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
@@ -14,9 +18,23 @@ import toolBox.Maths;
 
 public class Renderer {
 
+	private static final float FOV = 70;
+	private static final float NEAR_PLANE = 0.1f;
+	private static final float FAR_PLANE = 1000;
+	
+	private Matrix4f projectionMatrix;
+	
+	public Renderer(StaticShader shader) {
+		createProjectionMatrix();
+		shader.start();
+		shader.loadProjectionMatrix(projectionMatrix);
+		shader.stop();
+	}
+	
 	public void prepare() {
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT|GL11.GL_DEPTH_BUFFER_BIT);
 		GL11.glClearColor(0, 0, 0, 1);
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 	}
 
 	public void render(Entity entity, StaticShader shader) {
@@ -34,6 +52,26 @@ public class Renderer {
 		GL20.glDisableVertexAttribArray(0);
 		GL20.glDisableVertexAttribArray(1);
 		GL30.glBindVertexArray(0);
+	}
+	
+	private void createProjectionMatrix() {
+		IntBuffer w = BufferUtils.createIntBuffer(1);
+		IntBuffer h = BufferUtils.createIntBuffer(1);
+		GLFW.glfwGetWindowSize(DisplayManager.window, w, h);
+		int width = w.get(0);
+		int height = h.get(0);
+		float aspectRatio = width/height;
+		float yScale = (float) ((1f/Math.tan(Math.toRadians(FOV/2f)))*aspectRatio);
+		float xScale = yScale/aspectRatio;
+		float frustumLength = FAR_PLANE-NEAR_PLANE;
+		
+		projectionMatrix = new Matrix4f();
+		projectionMatrix.m00 = xScale;
+		projectionMatrix.m11 = yScale;
+		projectionMatrix.m22 = -((FAR_PLANE+NEAR_PLANE)/frustumLength);
+		projectionMatrix.m23 = -1;
+		projectionMatrix.m32 = -((2*FAR_PLANE*NEAR_PLANE)/frustumLength);
+		projectionMatrix.m33 = 0;
 	}
 
 }
