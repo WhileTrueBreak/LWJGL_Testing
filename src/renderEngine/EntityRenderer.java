@@ -1,11 +1,8 @@
 package renderEngine;
 
-import java.nio.IntBuffer;
 import java.util.List;
 import java.util.Map;
 
-import org.lwjgl.BufferUtils;
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
@@ -51,6 +48,7 @@ public class EntityRenderer {
 		ModelTexture texture = texturedModel.getTexture();
 		if(texture.isTransparent())
 			MasterRenderer.disableCulling();
+		shader.loadUseFakeLighting(texture.isUseFakeLighting());
 		shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL13.GL_TEXTURE_2D, texturedModel.getTexture().getID());

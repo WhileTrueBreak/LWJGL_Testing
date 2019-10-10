@@ -8,6 +8,7 @@ public class ModelTexture {
 	private float reflectivity = 0;
 	
 	private boolean transparent = false;
+	private boolean useFakeLighting = false;
 	
 	public ModelTexture(int id) {
 		textureID = id;
@@ -19,6 +20,14 @@ public class ModelTexture {
 
 	public void setTransparent(boolean transparent) {
 		this.transparent = transparent;
+	}
+
+	public boolean isUseFakeLighting() {
+		return useFakeLighting;
+	}
+
+	public void setUseFakeLighting(boolean useFakeLighting) {
+		this.useFakeLighting = useFakeLighting;
 	}
 
 	public int getID() {

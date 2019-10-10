@@ -34,6 +34,7 @@ public class MainGameLoop {
 		TexturedModel tree = new TexturedModel(OBJLoader.loadOBJModel("tree", loader), new ModelTexture(loader.loadTexture("tree")));
 		TexturedModel grass = new TexturedModel(OBJLoader.loadOBJModel("grassModel", loader), new ModelTexture(loader.loadTexture("grassTexture")));
 		grass.getTexture().setTransparent(true);
+		grass.getTexture().setUseFakeLighting(true);
 		TexturedModel fern = new TexturedModel(OBJLoader.loadOBJModel("fern", loader), new ModelTexture(loader.loadTexture("fern")));
 		fern.getTexture().setTransparent(true);
 		
