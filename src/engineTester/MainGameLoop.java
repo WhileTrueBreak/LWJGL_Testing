@@ -10,10 +10,10 @@ import entities.Camera;
 import entities.Entity;
 import entities.Light;
 import models.TexturedModel;
+import objConverter.OBJFileLoader;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
-import renderEngine.OBJLoader;
 import terrains.Terrain;
 import textures.ModelTexture;
 
@@ -29,21 +29,24 @@ public class MainGameLoop {
 		
 		DisplayManager.createDisplay();
 		Loader loader = new Loader();
-
+		
 		//Setting up models
-		TexturedModel tree = new TexturedModel(OBJLoader.loadOBJModel("tree", loader), new ModelTexture(loader.loadTexture("tree")));
-		TexturedModel grass = new TexturedModel(OBJLoader.loadOBJModel("grassModel", loader), new ModelTexture(loader.loadTexture("grassTexture")));
+		System.out.print("Loading Models...");
+		TexturedModel tree1 = new TexturedModel(loader.loadToVAO(OBJFileLoader.loadOBJ("tree")), new ModelTexture(loader.loadTexture("tree")));
+		TexturedModel tree2 = new TexturedModel(loader.loadToVAO(OBJFileLoader.loadOBJ("lowPolyTree")), new ModelTexture(loader.loadTexture("lowPolyTree")));
+		TexturedModel grass = new TexturedModel(loader.loadToVAO(OBJFileLoader.loadOBJ("grassModel")), new ModelTexture(loader.loadTexture("grassTexture")));
 		grass.getTexture().setTransparent(true);
 		grass.getTexture().setUseFakeLighting(true);
-		TexturedModel fern = new TexturedModel(OBJLoader.loadOBJModel("fern", loader), new ModelTexture(loader.loadTexture("fern")));
+		TexturedModel fern = new TexturedModel(loader.loadToVAO(OBJFileLoader.loadOBJ("fern")), new ModelTexture(loader.loadTexture("fern")));
 		fern.getTexture().setTransparent(true);
-		
+		System.out.println("Done!");
 		List<Entity> entities = new ArrayList<Entity>();
 		
 		for(int i = 0;i < 500;i++) {
-			entities.add(new Entity(tree, new Vector3f((float) (Math.random()*800-400), 0, (float) (Math.random()*800-400)), 0, 0, 0, 3));
-			entities.add(new Entity(grass, new Vector3f((float) (Math.random()*800-400), 0, (float) (Math.random()*800-400)), 0, 0, 0, 1));
-			entities.add(new Entity(fern, new Vector3f((float) (Math.random()*800-400), 0, (float) (Math.random()*800-400)), 0, 0, 0, 0.6f));
+			entities.add(new Entity(tree1, new Vector3f((float) (Math.random()*800-400), 0, (float) (Math.random()*800-400)), 0, (float) Math.random()*360, 0, 3));
+			entities.add(new Entity(tree2, new Vector3f((float) (Math.random()*800-400), 0, (float) (Math.random()*800-400)), 0, (float) Math.random()*360, 0, 0.25f));
+			entities.add(new Entity(grass, new Vector3f((float) (Math.random()*800-400), 0, (float) (Math.random()*800-400)), 0, (float) Math.random()*360, 0, 1));
+			entities.add(new Entity(fern, new Vector3f((float) (Math.random()*800-400), 0, (float) (Math.random()*800-400)), 0, (float) Math.random()*360, 0, 0.6f));
 		}
 		
 		Light light = new Light(new Vector3f(0, 100, 0), new Vector3f(1, 1, 1));

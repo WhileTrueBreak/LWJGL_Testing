@@ -15,6 +15,7 @@ import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 
 import models.RawModel;
+import objConverter.ModelData;
 
 public class Loader {
 
@@ -30,6 +31,10 @@ public class Loader {
 		storeDataInAttributeList(2, 3, normals);
 		unbindVAO();
 		return new RawModel(vaoID, indices.length);
+	}
+	
+	public RawModel loadToVAO(ModelData data) {
+		return loadToVAO(data.getVertices(), data.getTextureCoords(), data.getNormals(), data.getIndices());
 	}
 
 	public int loadTexture(String path) {
