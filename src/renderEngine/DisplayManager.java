@@ -1,8 +1,10 @@
 package renderEngine;
 
 import java.awt.Toolkit;
+
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryUtil;
 
 public class DisplayManager {
@@ -25,6 +27,7 @@ public class DisplayManager {
 		GLFW.glfwSetWindowPos(window, 
 				Toolkit.getDefaultToolkit().getScreenSize().width/2-WIDTH/2, 
 				Toolkit.getDefaultToolkit().getScreenSize().height/2-HEIGHT/2);
+		GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GL11.GL_FALSE);
 		System.out.print("Done!\n");
 		GLFW.glfwMakeContextCurrent(window);
 		GLFW.glfwShowWindow(window);

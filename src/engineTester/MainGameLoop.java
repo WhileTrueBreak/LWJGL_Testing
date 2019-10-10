@@ -29,11 +29,13 @@ public class MainGameLoop {
 		StaticShader shader = new StaticShader();
 		Renderer renderer = new Renderer(shader);
 
-		RawModel model = OBJLoader.loadOBJModel("stall", loader);
-		ModelTexture texture = new ModelTexture(loader.loadTexture("stallTexture"));
-		TexturedModel texturedModel = new TexturedModel(model, texture);
+		RawModel dragonModel = OBJLoader.loadOBJModel("dragon", loader);
+		RawModel stallModel = OBJLoader.loadOBJModel("stall", loader);
+		ModelTexture stallTexture = new ModelTexture(loader.loadTexture("stallTexture"));
+		ModelTexture pngTexture = new ModelTexture(loader.loadTexture("solid_blue"));
+		TexturedModel texturedModel = new TexturedModel(dragonModel, pngTexture);
 
-		Entity entity = new Entity(texturedModel, new Vector3f(0, -5, -10), 0, 0, 0, 1);
+		Entity entity = new Entity(texturedModel, new Vector3f(0, -5, -15), 0, 0, 0, 1);
 
 		Camera camera = new Camera();
 		
@@ -49,8 +51,9 @@ public class MainGameLoop {
 				timeElapsed = 0;
 			}
 			startTime = System.nanoTime();
+			//START//
 			entity.increasePosition(0, 0, 0);
-			entity.increaseRotation(0, 1, 0);
+			entity.increaseRotation(0, 0.5f, 0);
 			camera.move();
 			GLFW.glfwPollEvents();
 			renderer.prepare();
@@ -59,6 +62,7 @@ public class MainGameLoop {
 			renderer.render(entity, shader);
 			shader.stop();
 			DisplayManager.updateDisplay();
+			//END//
 		}
 
 		shader.cleanUp();

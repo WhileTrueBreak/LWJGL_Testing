@@ -18,16 +18,16 @@ public class Camera {
 	
 	public void move() {
 		if(GLFW.glfwGetKey(DisplayManager.window, GLFW.GLFW_KEY_W) == GLFW.GLFW_PRESS) {
-			position.z-=0.02f;
+			position.z-=0.2f;
 		}
 		if(GLFW.glfwGetKey(DisplayManager.window, GLFW.GLFW_KEY_A) == GLFW.GLFW_PRESS) {
-			position.x-=0.02f;
+			position.x-=0.2f;
 		}
 		if(GLFW.glfwGetKey(DisplayManager.window, GLFW.GLFW_KEY_S) == GLFW.GLFW_PRESS) {
-			position.z+=0.02f;
+			position.z+=0.2f;
 		}
 		if(GLFW.glfwGetKey(DisplayManager.window, GLFW.GLFW_KEY_D) == GLFW.GLFW_PRESS) {
-			position.x+=0.02f;
+			position.x+=0.2f;
 		}
 		if(GLFW.glfwGetKey(DisplayManager.window, GLFW.GLFW_KEY_Q) == GLFW.GLFW_PRESS) {
 			yaw-=1f;
