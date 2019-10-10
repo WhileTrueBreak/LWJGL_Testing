@@ -12,7 +12,12 @@ uniform vec3 lightColor;
 uniform float shineDamper;
 uniform float reflectivity;
 
-void main(void){
+void main(void){	
+
+	vec4 textureColor = texture(textureSimpler, passTextureCoords);
+	if(textureColor.a < 0.5){
+		discard;
+	}
 	
 	vec3 unitNormal = normalize(surfaceNormal);
 	vec3 unitLightVec = normalize(lightVec);

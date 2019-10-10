@@ -16,6 +16,8 @@ import entities.Entity;
 import entities.Light;
 import models.TexturedModel;
 import shaders.StaticShader;
+import shaders.TerrainShader;
+import terrains.Terrain;
 
 public class MasterRenderer {
 
@@ -25,26 +27,49 @@ public class MasterRenderer {
 	
 	private Matrix4f projectionMatrix;
 	
-	private StaticShader shader = new StaticShader();
-	private EntityRenderer renderer;
+	private StaticShader entityShader = new StaticShader();
+	private EntityRenderer entityRenderer;
+	
+	private TerrainShader terrainShader = new TerrainShader();
+	private TerrainRenderer terrainRenderer;
 	
 	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
+	private List<Terrain> terrains = new ArrayList<Terrain>();
 	
 	public MasterRenderer() {
+		enableCulling();
+		createProjectionMatrix();
+		entityRenderer = new EntityRenderer(entityShader, projectionMatrix);
+		terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
+	}
+	
+	public static void enableCulling() {
 		GL11.glEnable(GL11.GL_CULL_FACE);
 		GL11.glCullFace(GL11.GL_BACK);
-		createProjectionMatrix();
-		renderer = new EntityRenderer(shader, projectionMatrix);
+	}
+	
+	public static void disableCulling() {
+		GL11.glDisable(GL11.GL_CULL_FACE);
 	}
 	
 	public void render(Light light, Camera camera) {
 		prepare();
-		shader.start();
-		shader.loadLight(light);
-		shader.loadViewMatrix(camera);
-		renderer.render(entities);
-		shader.stop();
+		entityShader.start();
+		entityShader.loadLight(light);
+		entityShader.loadViewMatrix(camera);
+		entityRenderer.render(entities);
+		entityShader.stop();
+		terrainShader.start();
+		terrainShader.loadLight(light);
+		terrainShader.loadViewMatrix(camera);
+		terrainRenderer.render(terrains);
+		terrainShader.stop();
 		entities.clear();
+		terrains.clear();
+	}
+	
+	public void processingTerrain(Terrain terrain) {
+		terrains.add(terrain);
 	}
 	
 	public void processEntity(Entity entity) {
@@ -66,7 +91,8 @@ public class MasterRenderer {
 	}
 	
 	public void cleanUp() {
-		shader.cleanUp();
+		entityShader.cleanUp();
+		terrainShader.cleanUp();
 	}
 	
 	private void createProjectionMatrix() {
