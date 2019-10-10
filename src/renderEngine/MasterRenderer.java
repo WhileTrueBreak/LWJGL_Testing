@@ -1,22 +1,23 @@
 package renderEngine;
 
 import java.nio.IntBuffer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 
+import entities.Camera;
 import entities.Entity;
-import models.RawModel;
+import entities.Light;
 import models.TexturedModel;
 import shaders.StaticShader;
-import toolBox.Maths;
 
-public class Renderer {
+public class MasterRenderer {
 
 	private static final float FOV = 70;
 	private static final float NEAR_PLANE = 0.1f;
@@ -24,11 +25,38 @@ public class Renderer {
 	
 	private Matrix4f projectionMatrix;
 	
-	public Renderer(StaticShader shader) {
+	private StaticShader shader = new StaticShader();
+	private EntityRenderer renderer;
+	
+	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
+	
+	public MasterRenderer() {
+		GL11.glEnable(GL11.GL_CULL_FACE);
+		GL11.glCullFace(GL11.GL_BACK);
 		createProjectionMatrix();
+		renderer = new EntityRenderer(shader, projectionMatrix);
+	}
+	
+	public void render(Light light, Camera camera) {
+		prepare();
 		shader.start();
-		shader.loadProjectionMatrix(projectionMatrix);
+		shader.loadLight(light);
+		shader.loadViewMatrix(camera);
+		renderer.render(entities);
 		shader.stop();
+		entities.clear();
+	}
+	
+	public void processEntity(Entity entity) {
+		TexturedModel texturedModel = entity.getTexturedModel();
+		List<Entity> batch = entities.get(texturedModel);
+		if(batch != null) {
+			batch.add(entity);
+		}else {
+			List<Entity> newBatch = new ArrayList<Entity>();
+			newBatch.add(entity);
+			entities.put(texturedModel, newBatch);
+		}
 	}
 	
 	public void prepare() {
@@ -36,22 +64,9 @@ public class Renderer {
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT|GL11.GL_DEPTH_BUFFER_BIT);
 		GL11.glClearColor(0, 0, 0, 1);
 	}
-
-	public void render(Entity entity, StaticShader shader) {
-		TexturedModel texturedModel = entity.getTexturedModel();
-		RawModel model = texturedModel.getModel();
-		GL30.glBindVertexArray(model.getVaoID());
-		GL20.glEnableVertexAttribArray(0);
-		GL20.glEnableVertexAttribArray(1);
-		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), 
-				entity.getRotx(), entity.getRoty(), entity.getRotz(), entity.getScale());
-		shader.loadTransformationMatrix(transformationMatrix);
-		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL13.GL_TEXTURE_2D, texturedModel.getTexture().getID());
-		GL11.glDrawElements(GL11.GL_TRIANGLES, model.getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
-		GL20.glDisableVertexAttribArray(0);
-		GL20.glDisableVertexAttribArray(1);
-		GL30.glBindVertexArray(0);
+	
+	public void cleanUp() {
+		shader.cleanUp();
 	}
 	
 	private void createProjectionMatrix() {
@@ -73,5 +88,5 @@ public class Renderer {
 		projectionMatrix.m32 = -((2*FAR_PLANE*NEAR_PLANE)/frustumLength);
 		projectionMatrix.m33 = 0;
 	}
-
+	
 }

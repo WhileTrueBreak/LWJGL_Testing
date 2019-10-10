@@ -3,6 +3,7 @@ package shaders;
 import org.lwjgl.util.vector.Matrix4f;
 
 import entities.Camera;
+import entities.Light;
 import toolBox.Maths;
 
 public class StaticShader extends ShaderProgram{
@@ -13,6 +14,10 @@ public class StaticShader extends ShaderProgram{
 	private int locationTransformationMatrix;
 	private int locationProjectionMatrix;
 	private int locationViewMatrix;
+	private int locationLightPos;
+	private int locationLightColor;
+	private int locationShineDamper;
+	private int locationReflectivity;
 	
 	public StaticShader() {
 		super(VERTEX_FILE, FRAGMENT_FILE);
@@ -22,6 +27,7 @@ public class StaticShader extends ShaderProgram{
 	protected void bindAttributes() {
 		super.bindAttribute(0, "position");
 		super.bindAttribute(1, "textureCoords");
+		super.bindAttribute(2, "normal");
 	}
 
 	@Override
@@ -29,10 +35,24 @@ public class StaticShader extends ShaderProgram{
 		locationTransformationMatrix = super.getUniformLocation("transformationMatrix");
 		locationProjectionMatrix = super.getUniformLocation("projectionMatrix");
 		locationViewMatrix = super.getUniformLocation("viewMatrix");
+		locationLightPos = super.getUniformLocation("lightPos");
+		locationLightColor = super.getUniformLocation("lightColor");
+		locationShineDamper = super.getUniformLocation("shineDamper");
+		locationReflectivity = super.getUniformLocation("reflectivity");
+	}
+	
+	public void loadShineVariables(float shineDamper, float reflectivity) {
+		super.loadFloat(locationShineDamper, shineDamper);
+		super.loadFloat(locationReflectivity, reflectivity);
 	}
 	
 	public void loadTransformationMatrix(Matrix4f matrix) {
 		super.loadMatrix(locationTransformationMatrix, matrix);
+	}
+	
+	public void loadLight(Light light) {
+		super.loadVector(locationLightPos, light.getPosition());
+		super.loadVector(locationLightColor, light.getColor());
 	}
 	
 	public void loadProjectionMatrix(Matrix4f matrix) {
@@ -41,6 +61,6 @@ public class StaticShader extends ShaderProgram{
 	
 	public void loadViewMatrix(Camera camera) {
 		super.loadMatrix(locationViewMatrix, Maths.createViewMatrix(camera));
-	}
+	}	
 
 }

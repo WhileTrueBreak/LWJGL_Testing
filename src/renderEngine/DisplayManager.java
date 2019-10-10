@@ -32,6 +32,7 @@ public class DisplayManager {
 		GLFW.glfwMakeContextCurrent(window);
 		GLFW.glfwShowWindow(window);
 		GLFW.glfwMakeContextCurrent(window);
+		GLFW.glfwSwapInterval(0);
 		GL.createCapabilities();
 		System.out.println("Done!");
 	}
