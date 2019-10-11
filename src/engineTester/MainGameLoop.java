@@ -40,10 +40,10 @@ public class MainGameLoop {
 		grass.getTexture().setTransparent(true);
 		grass.getTexture().setUseFakeLighting(true);
 		TexturedModel fern = new TexturedModel(loader.loadToVAO(OBJFileLoader.loadOBJ("fern")), new ModelTexture(loader.loadTexture("fern")));
-		ModelTexture solidBlue = new ModelTexture(loader.loadTexture("white"));
+		ModelTexture solidBlue = new ModelTexture(loader.loadTexture("solid_blue"));
 		solidBlue.setReflectivity(1.5f);
 		solidBlue.setShineDamper(5);
-		TexturedModel dragon = new TexturedModel(loader.loadToVAO(OBJFileLoader.loadOBJ("bunny")), solidBlue);
+		TexturedModel dragon = new TexturedModel(loader.loadToVAO(OBJFileLoader.loadOBJ("dragon")), solidBlue);
 		fern.getTexture().setTransparent(true);
 		System.out.println("Done!");
 		List<Entity> entities = new ArrayList<Entity>();
@@ -96,16 +96,17 @@ public class MainGameLoop {
 			//sync end
 			GLFW.glfwPollEvents();
 			//START//
+			//upadte??
 			//entity.increasePosition(0, 0, 0);
 			//entity.increaseRotation(0, 0.5f, 0);
 			camera.move();
-			
+			//render//
 			renderer.processingTerrain(terrain1);
 			renderer.processingTerrain(terrain2);
 			renderer.processingTerrain(terrain3);
 			renderer.processingTerrain(terrain4);
 			
-			for(Entity entity:entities)
+			for(Entity entity:entities) 
 				renderer.processEntity(entity);
 			
 			renderer.render(light, camera);
