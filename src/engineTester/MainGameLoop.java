@@ -9,6 +9,7 @@ import org.lwjgl.util.vector.Vector3f;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
+import entities.Player;
 import models.TexturedModel;
 import objConverter.OBJFileLoader;
 import renderEngine.DisplayManager;
@@ -21,9 +22,10 @@ import textures.TerrainTexturePack;
 
 public class MainGameLoop {
 
+	static final int FPS_CAP = 120;
+	
 	public static void main(String[] args) {
 		
-		final int FPS_CAP = 120;
 		
 		double startTime = System.nanoTime();
 		double avgMSF = 0;
@@ -44,6 +46,7 @@ public class MainGameLoop {
 		solidBlue.setReflectivity(1.5f);
 		solidBlue.setShineDamper(5);
 		TexturedModel dragon = new TexturedModel(loader.loadToVAO(OBJFileLoader.loadOBJ("dragon")), solidBlue);
+		TexturedModel bunny = new TexturedModel(loader.loadToVAO(OBJFileLoader.loadOBJ("bunny")), solidBlue);
 		fern.getTexture().setTransparent(true);
 		System.out.println("Done!");
 		List<Entity> entities = new ArrayList<Entity>();
@@ -54,7 +57,9 @@ public class MainGameLoop {
 			entities.add(new Entity(grass, new Vector3f((float) (Math.random()*1600), 0, (float) (Math.random()*1600)), 0, (float) Math.random()*360, 0, 1));
 			entities.add(new Entity(fern, new Vector3f((float) (Math.random()*1600), 0, (float) (Math.random()*1600)), 0, (float) Math.random()*360, 0, 0.6f));
 		}
-		entities.add(new Entity(dragon, new Vector3f(0, 0, 0), 0, (float) Math.random()*360, 0, 0.6f));
+		//entities.add(new Entity(dragon, new Vector3f(0, 0, 0), 0, (float) Math.random()*360, 0, 0.6f));
+		
+		Player player = new Player(bunny, new Vector3f(100, 0, 50), 0, 0, 0, 1);
 		
 		Light light = new Light(new Vector3f(0, 100, 0), new Vector3f(1, 1, 1));
 		
@@ -76,7 +81,7 @@ public class MainGameLoop {
 		Terrain terrain4 = new Terrain(1, 0, loader, texturePack, blendMap);
 		
 		///////////
-		Camera camera = new Camera();
+		Camera camera = new Camera(player);
 		
 		MasterRenderer renderer = new MasterRenderer();
 		
@@ -100,11 +105,14 @@ public class MainGameLoop {
 			//entity.increasePosition(0, 0, 0);
 			//entity.increaseRotation(0, 0.5f, 0);
 			camera.move();
+			player.move();
 			//render//
 			renderer.processingTerrain(terrain1);
 			renderer.processingTerrain(terrain2);
 			renderer.processingTerrain(terrain3);
 			renderer.processingTerrain(terrain4);
+			
+			renderer.processEntity(player);
 			
 			for(Entity entity:entities) 
 				renderer.processEntity(entity);
