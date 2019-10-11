@@ -40,6 +40,10 @@ public class MainGameLoop {
 		grass.getTexture().setTransparent(true);
 		grass.getTexture().setUseFakeLighting(true);
 		TexturedModel fern = new TexturedModel(loader.loadToVAO(OBJFileLoader.loadOBJ("fern")), new ModelTexture(loader.loadTexture("fern")));
+		ModelTexture solidBlue = new ModelTexture(loader.loadTexture("white"));
+		solidBlue.setReflectivity(1.5f);
+		solidBlue.setShineDamper(5);
+		TexturedModel dragon = new TexturedModel(loader.loadToVAO(OBJFileLoader.loadOBJ("bunny")), solidBlue);
 		fern.getTexture().setTransparent(true);
 		System.out.println("Done!");
 		List<Entity> entities = new ArrayList<Entity>();
@@ -50,6 +54,7 @@ public class MainGameLoop {
 			entities.add(new Entity(grass, new Vector3f((float) (Math.random()*1600), 0, (float) (Math.random()*1600)), 0, (float) Math.random()*360, 0, 1));
 			entities.add(new Entity(fern, new Vector3f((float) (Math.random()*1600), 0, (float) (Math.random()*1600)), 0, (float) Math.random()*360, 0, 0.6f));
 		}
+		entities.add(new Entity(dragon, new Vector3f(0, 0, 0), 0, (float) Math.random()*360, 0, 0.6f));
 		
 		Light light = new Light(new Vector3f(0, 100, 0), new Vector3f(1, 1, 1));
 		
