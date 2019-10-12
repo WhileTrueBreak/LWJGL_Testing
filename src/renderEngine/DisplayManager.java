@@ -63,6 +63,7 @@ public class DisplayManager {
 
 	public static void updateDisplay() {
 		mouseScrollInput.reset();
+		cursorPosInput.reset();
 		GLFW.glfwSwapBuffers(DisplayManager.window);
 		GLFW.glfwGetTimerFrequency();
 		long currentFrameTime = getCurrentTime();
