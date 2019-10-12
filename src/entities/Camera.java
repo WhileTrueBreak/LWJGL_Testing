@@ -1,7 +1,5 @@
 package entities;
 
-import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWScrollCallback;
 import org.lwjgl.util.vector.Vector3f;
 
 import renderEngine.DisplayManager;
@@ -59,7 +57,7 @@ public class Camera {
 	}
 	
 	private void calcZoom() {
-		float zoomLevel = (float) DisplayManager.mouseScrollInput.getScrollY() * 0.3f;
+		float zoomLevel = (float) DisplayManager.mouseScrollInput.getScrollY() * 1f;
 		distanceFromPlayer -= zoomLevel;
 	}
 	

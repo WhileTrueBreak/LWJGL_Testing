@@ -45,7 +45,7 @@ public class MainGameLoop {
 		ModelTexture solidBlue = new ModelTexture(loader.loadTexture("solid_blue"));
 		solidBlue.setReflectivity(1.5f);
 		solidBlue.setShineDamper(5);
-		TexturedModel dragon = new TexturedModel(loader.loadToVAO(OBJFileLoader.loadOBJ("dragon")), solidBlue);
+		//TexturedModel dragon = new TexturedModel(loader.loadToVAO(OBJFileLoader.loadOBJ("dragon")), solidBlue);
 		TexturedModel bunny = new TexturedModel(loader.loadToVAO(OBJFileLoader.loadOBJ("bunny")), solidBlue);
 		fern.getTexture().setTransparent(true);
 		System.out.println("Done!");

@@ -84,8 +84,4 @@ public class DisplayManager {
 		return System.currentTimeMillis();
 	}
 
-	private static void cursorPositionCallback(long window, double xPos, double yPos) {
-		
-	}
-
 }
