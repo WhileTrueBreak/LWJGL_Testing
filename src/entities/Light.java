@@ -1,8 +1,10 @@
 package entities;
 
+import java.util.Comparator;
+
 import org.lwjgl.util.vector.Vector3f;
 
-public class Light {
+public class Light implements Comparable<Light>{
 	
 	private Vector3f position;
 	private Vector3f color;
@@ -37,6 +39,11 @@ public class Light {
 
 	public void setColor(Vector3f color) {
 		this.color = color;
+	}
+
+	@Override
+	public int compareTo(Light l) {
+		return 0;
 	}
 	
 }

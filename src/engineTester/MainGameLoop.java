@@ -1,6 +1,7 @@
 package engineTester;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.lwjgl.glfw.GLFW;
@@ -71,19 +72,19 @@ public class MainGameLoop {
 		List<Entity> entities = new ArrayList<Entity>();
 		
 		for(int i = 0;i < 500;i++) {
-			float x = (float) (Math.random()*1600);
-			float z = (float) (Math.random()*1600);
+			float x = (float) (Math.random()*800);
+			float z = (float) (Math.random()*800);
 			entities.add(new Entity(tree1, new Vector3f(x, terrain1.getHeightOffTerrain(x, z), z), 0, (float) Math.random()*360, 0, 3));
-			x = (float) (Math.random()*1600);
-			z = (float) (Math.random()*1600);
+			x = (float) (Math.random()*800);
+			z = (float) (Math.random()*800);
 			entities.add(new Entity(tree2, new Vector3f(x, terrain1.getHeightOffTerrain(x, z), z), 0, (float) Math.random()*360, 0, 0.25f));
-			x = (float) (Math.random()*1600);
-			z = (float) (Math.random()*1600);
+			x = (float) (Math.random()*800);
+			z = (float) (Math.random()*800);
 			entities.add(new Entity(fern, (int)(Math.random()*4), new Vector3f(x, terrain1.getHeightOffTerrain(x, z), z), 0, (float) Math.random()*360, 0, 0.6f));
 		}
 		for(int i = 0;i < 4500;i++) {
-			float x = (float) (Math.random()*1600);
-			float z = (float) (Math.random()*1600);
+			float x = (float) (Math.random()*800);
+			float z = (float) (Math.random()*800);
 			entities.add(new Entity(fern, (int)(Math.random()*4), new Vector3f(x, terrain1.getHeightOffTerrain(x, z), z), 0, (float) Math.random()*360, 0, 0.6f));
 		}
 		//entities.add(new Entity(dragon, new Vector3f(0, 0, 0), 0, (float) Math.random()*360, 0, 0.6f));
@@ -91,10 +92,13 @@ public class MainGameLoop {
 		Player player = new Player(person, new Vector3f(100, 0, 50), 0, 0, 0, 1);
 		
 		List<Light>lights = new ArrayList<Light>();
-		lights.add(new Light(new Vector3f(256, 1000, 256), new Vector3f(0.4f, 0.4f, 0.4f)));
-		lights.add(new Light(new Vector3f(180, terrain1.getHeightOffTerrain(180, 293)+10, 293), new Vector3f(2, 0, 0), new Vector3f(1, 0.01f, 0.002f)));
-		lights.add(new Light(new Vector3f(370, terrain1.getHeightOffTerrain(370, 300)+10, 300), new Vector3f(0, 2, 0), new Vector3f(1, 0.01f, 0.002f)));
-		lights.add(new Light(new Vector3f(293, terrain1.getHeightOffTerrain(293, 305)+10, 305), new Vector3f(0, 0, 2), new Vector3f(1, 0.01f, 0.002f)));
+		lights.add(new Light(new Vector3f(400, 1000, 400), new Vector3f(0.4f, 0.4f, 0.4f)));
+		
+		for(int i = 0;i < 15;i++) {
+			float x = (float) (Math.random()*800);
+			float z = (float) (Math.random()*800);
+			lights.add(new Light(new Vector3f(x, terrain1.getHeightOffTerrain(x, z)+10, z), new Vector3f(2, 0, 0), new Vector3f(1, 0.01f, 0.002f)));
+		}
 		
 		///////////
 		Camera camera = new Camera(player);
@@ -123,7 +127,8 @@ public class MainGameLoop {
 			//sync end
 			GLFW.glfwPollEvents();
 			//START//
-			//upadte
+			//update
+			//Collections.sort(lights, (l1, l2) -> {return (Vector3f.add(l1.getPosition(), l2.getPosition(), null).length() > 0)?-1:1;});
 			//entity.increasePosition(0, 0, 0);
 			//entity.increaseRotation(0, 0.5f, 0);
 			camera.move();
