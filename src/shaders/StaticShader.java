@@ -1,6 +1,7 @@
 package shaders;
 
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import entities.Camera;
@@ -21,6 +22,8 @@ public class StaticShader extends ShaderProgram{
 	private int locationReflectivity;
 	private int locationUseFakeLighting;
 	private int loactionSkyColor;
+	private int locationOffset;
+	private int locationNumRows;
 	
 	public StaticShader() {
 		super(VERTEX_FILE, FRAGMENT_FILE);
@@ -44,6 +47,16 @@ public class StaticShader extends ShaderProgram{
 		locationReflectivity = super.getUniformLocation("reflectivity");
 		locationUseFakeLighting = super.getUniformLocation("useFakeLighting");
 		loactionSkyColor = super.getUniformLocation("skyColor");
+		locationOffset = super.getUniformLocation("offset");
+		locationNumRows = super.getUniformLocation("numRows");
+	}
+	
+	public void loadOffset(float xOff, float yOff) {
+		super.loadVector2(locationOffset, new Vector2f(xOff, yOff));
+	}
+	
+	public void loadNumRows(int rows) {
+		super.loadInt(locationNumRows, rows);
 	}
 	
 	public void loadShineVariables(float shineDamper, float reflectivity) {
@@ -56,8 +69,8 @@ public class StaticShader extends ShaderProgram{
 	}
 	
 	public void loadLight(Light light) {
-		super.loadVector(locationLightPos, light.getPosition());
-		super.loadVector(locationLightColor, light.getColor());
+		super.loadVector3(locationLightPos, light.getPosition());
+		super.loadVector3(locationLightColor, light.getColor());
 	}
 	
 	public void loadProjectionMatrix(Matrix4f matrix) {
@@ -73,7 +86,7 @@ public class StaticShader extends ShaderProgram{
 	}
 	
 	public void loadSkyColor(float r, float g, float b) {
-		super.loadVector(loactionSkyColor, new Vector3f(r, g, b));
+		super.loadVector3(loactionSkyColor, new Vector3f(r, g, b));
 	}
 
 }

@@ -55,7 +55,9 @@ public class MainGameLoop {
 		TexturedModel grass = new TexturedModel(loader.loadToVAO(OBJFileLoader.loadOBJ("grassModel")), new ModelTexture(loader.loadTexture("grassTexture")));
 		grass.getTexture().setTransparent(true);
 		grass.getTexture().setUseFakeLighting(true);
-		TexturedModel fern = new TexturedModel(loader.loadToVAO(OBJFileLoader.loadOBJ("fern")), new ModelTexture(loader.loadTexture("fern")));
+		ModelTexture fernTexture = new ModelTexture(loader.loadTexture("fern"));
+		fernTexture.setNumberOfRows(2);
+		TexturedModel fern = new TexturedModel(loader.loadToVAO(OBJFileLoader.loadOBJ("fern")), fernTexture);
 		ModelTexture solidBlue = new ModelTexture(loader.loadTexture("solid_blue"));
 		solidBlue.setReflectivity(1.5f);
 		solidBlue.setShineDamper(5);
@@ -74,7 +76,12 @@ public class MainGameLoop {
 			entities.add(new Entity(tree2, new Vector3f(x, terrain1.getHeightOffTerrain(x, z), z), 0, (float) Math.random()*360, 0, 0.25f));
 			x = (float) (Math.random()*1600);
 			z = (float) (Math.random()*1600);
-			entities.add(new Entity(fern, new Vector3f(x, terrain1.getHeightOffTerrain(x, z), z), 0, (float) Math.random()*360, 0, 0.6f));
+			entities.add(new Entity(fern, (int)(Math.random()*4), new Vector3f(x, terrain1.getHeightOffTerrain(x, z), z), 0, (float) Math.random()*360, 0, 0.6f));
+		}
+		for(int i = 0;i < 4500;i++) {
+			float x = (float) (Math.random()*1600);
+			float z = (float) (Math.random()*1600);
+			entities.add(new Entity(fern, (int)(Math.random()*4), new Vector3f(x, terrain1.getHeightOffTerrain(x, z), z), 0, (float) Math.random()*360, 0, 0.6f));
 		}
 		//entities.add(new Entity(dragon, new Vector3f(0, 0, 0), 0, (float) Math.random()*360, 0, 0.6f));
 		
