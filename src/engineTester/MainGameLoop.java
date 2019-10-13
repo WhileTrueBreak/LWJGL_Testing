@@ -34,35 +34,6 @@ public class MainGameLoop {
 		DisplayManager.createDisplay();
 		Loader loader = new Loader();
 		
-		//Setting up models
-		System.out.print("Loading Models...");
-		TexturedModel tree1 = new TexturedModel(loader.loadToVAO(OBJFileLoader.loadOBJ("tree")), new ModelTexture(loader.loadTexture("tree")));
-		TexturedModel tree2 = new TexturedModel(loader.loadToVAO(OBJFileLoader.loadOBJ("lowPolyTree")), new ModelTexture(loader.loadTexture("lowPolyTree")));
-		TexturedModel grass = new TexturedModel(loader.loadToVAO(OBJFileLoader.loadOBJ("grassModel")), new ModelTexture(loader.loadTexture("grassTexture")));
-		grass.getTexture().setTransparent(true);
-		grass.getTexture().setUseFakeLighting(true);
-		TexturedModel fern = new TexturedModel(loader.loadToVAO(OBJFileLoader.loadOBJ("fern")), new ModelTexture(loader.loadTexture("fern")));
-		ModelTexture solidBlue = new ModelTexture(loader.loadTexture("solid_blue"));
-		solidBlue.setReflectivity(1.5f);
-		solidBlue.setShineDamper(5);
-		//TexturedModel dragon = new TexturedModel(loader.loadToVAO(OBJFileLoader.loadOBJ("dragon")), solidBlue);
-		TexturedModel bunny = new TexturedModel(loader.loadToVAO(OBJFileLoader.loadOBJ("bunny")), solidBlue);
-		fern.getTexture().setTransparent(true);
-		System.out.println("Done!");
-		List<Entity> entities = new ArrayList<Entity>();
-		
-		for(int i = 0;i < 500;i++) {
-			entities.add(new Entity(tree1, new Vector3f((float) (Math.random()*1600), 0, (float) (Math.random()*1600)), 0, (float) Math.random()*360, 0, 3));
-			entities.add(new Entity(tree2, new Vector3f((float) (Math.random()*1600), 0, (float) (Math.random()*1600)), 0, (float) Math.random()*360, 0, 0.25f));
-			entities.add(new Entity(grass, new Vector3f((float) (Math.random()*1600), 0, (float) (Math.random()*1600)), 0, (float) Math.random()*360, 0, 1));
-			entities.add(new Entity(fern, new Vector3f((float) (Math.random()*1600), 0, (float) (Math.random()*1600)), 0, (float) Math.random()*360, 0, 0.6f));
-		}
-		//entities.add(new Entity(dragon, new Vector3f(0, 0, 0), 0, (float) Math.random()*360, 0, 0.6f));
-		
-		Player player = new Player(bunny, new Vector3f(100, 0, 50), 0, 0, 0, 1);
-		
-		Light light = new Light(new Vector3f(0, 100, 0), new Vector3f(1, 1, 1));
-		
 		//create terrain
 		
 		//terrain texture
@@ -75,11 +46,41 @@ public class MainGameLoop {
 		
 		TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMap"));
 		
-		Terrain terrain1 = new Terrain(0, 0, loader, texturePack, blendMap);
-		Terrain terrain2 = new Terrain(0, 1, loader, texturePack, blendMap);
-		Terrain terrain3 = new Terrain(1, 1, loader, texturePack, blendMap);
-		Terrain terrain4 = new Terrain(1, 0, loader, texturePack, blendMap);
+		Terrain terrain1 = new Terrain(0, 0, loader, texturePack, blendMap, "heightmap");
 		
+		//Setting up models
+		System.out.print("Loading Models...");
+		TexturedModel tree1 = new TexturedModel(loader.loadToVAO(OBJFileLoader.loadOBJ("tree")), new ModelTexture(loader.loadTexture("tree")));
+		TexturedModel tree2 = new TexturedModel(loader.loadToVAO(OBJFileLoader.loadOBJ("lowPolyTree")), new ModelTexture(loader.loadTexture("lowPolyTree")));
+		TexturedModel grass = new TexturedModel(loader.loadToVAO(OBJFileLoader.loadOBJ("grassModel")), new ModelTexture(loader.loadTexture("grassTexture")));
+		grass.getTexture().setTransparent(true);
+		grass.getTexture().setUseFakeLighting(true);
+		TexturedModel fern = new TexturedModel(loader.loadToVAO(OBJFileLoader.loadOBJ("fern")), new ModelTexture(loader.loadTexture("fern")));
+		ModelTexture solidBlue = new ModelTexture(loader.loadTexture("solid_blue"));
+		solidBlue.setReflectivity(1.5f);
+		solidBlue.setShineDamper(5);
+		//TexturedModel dragon = new TexturedModel(loader.loadToVAO(OBJFileLoader.loadOBJ("dragon")), solidBlue);
+		TexturedModel person = new TexturedModel(loader.loadToVAO(OBJFileLoader.loadOBJ("person")), new ModelTexture(loader.loadTexture("playerTexture")));
+		fern.getTexture().setTransparent(true);
+		System.out.println("Done!");
+		List<Entity> entities = new ArrayList<Entity>();
+		
+		for(int i = 0;i < 500;i++) {
+			float x = (float) (Math.random()*1600);
+			float z = (float) (Math.random()*1600);
+			entities.add(new Entity(tree1, new Vector3f(x, terrain1.getHeightOffTerrain(x, z), z), 0, (float) Math.random()*360, 0, 3));
+			x = (float) (Math.random()*1600);
+			z = (float) (Math.random()*1600);
+			entities.add(new Entity(tree2, new Vector3f(x, terrain1.getHeightOffTerrain(x, z), z), 0, (float) Math.random()*360, 0, 0.25f));
+			x = (float) (Math.random()*1600);
+			z = (float) (Math.random()*1600);
+			entities.add(new Entity(fern, new Vector3f(x, terrain1.getHeightOffTerrain(x, z), z), 0, (float) Math.random()*360, 0, 0.6f));
+		}
+		//entities.add(new Entity(dragon, new Vector3f(0, 0, 0), 0, (float) Math.random()*360, 0, 0.6f));
+		
+		Player player = new Player(person, new Vector3f(100, 0, 50), 0, 0, 0, 1);
+		
+		Light light = new Light(new Vector3f(256, 1000, 256), new Vector3f(1, 1, 1));
 		///////////
 		Camera camera = new Camera(player);
 		
@@ -105,12 +106,9 @@ public class MainGameLoop {
 			//entity.increasePosition(0, 0, 0);
 			//entity.increaseRotation(0, 0.5f, 0);
 			camera.move();
-			player.move();
+			player.move(terrain1);
 			//render//
 			renderer.processingTerrain(terrain1);
-			renderer.processingTerrain(terrain2);
-			renderer.processingTerrain(terrain3);
-			renderer.processingTerrain(terrain4);
 			
 			renderer.processEntity(player);
 			
