@@ -6,14 +6,16 @@ in vec3 normal;
 
 out vec2 passTextureCoords;
 out vec3 surfaceNormal;
-out vec3 lightVec;
+uniform int lightSourceCount;
+out vec3 lightVec[16];
 out vec3 cameraVec;
 out float visibility;
+
 
 uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
-uniform vec3 lightPos;
+uniform vec3 lightPos[16];
 
 uniform float useFakeLighting;
 
@@ -37,7 +39,9 @@ void main(void){
 	}
 	
 	surfaceNormal = (transformationMatrix*vec4(actualNormal, 0)).xyz;
-	lightVec = lightPos-worldPosition.xyz;
+	for(int i = 0;i < lightSourceCount;i++){
+		lightVec[i] = lightPos[i]-worldPosition.xyz;
+	}
 	cameraVec = (inverse(viewMatrix) * vec4(0, 0, 0, 1)).xyz-worldPosition.xyz;
 	
 	float distance = length(positionRelativeToCam.xyz);

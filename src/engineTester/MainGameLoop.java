@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
 import entities.Player;
+import guis.GuiRenderer;
+import guis.GuiTexture;
 import models.TexturedModel;
 import objConverter.OBJFileLoader;
 import renderEngine.DisplayManager;
@@ -87,9 +90,20 @@ public class MainGameLoop {
 		
 		Player player = new Player(person, new Vector3f(100, 0, 50), 0, 0, 0, 1);
 		
-		Light light = new Light(new Vector3f(256, 1000, 256), new Vector3f(1, 1, 1));
+		List<Light>lights = new ArrayList<Light>();
+		lights.add(new Light(new Vector3f(256, 1000, 256), new Vector3f(0.4f, 0.4f, 0.4f)));
+		lights.add(new Light(new Vector3f(180, terrain1.getHeightOffTerrain(180, 293)+10, 293), new Vector3f(2, 0, 0), new Vector3f(1, 0.01f, 0.002f)));
+		lights.add(new Light(new Vector3f(370, terrain1.getHeightOffTerrain(370, 300)+10, 300), new Vector3f(0, 2, 0), new Vector3f(1, 0.01f, 0.002f)));
+		lights.add(new Light(new Vector3f(293, terrain1.getHeightOffTerrain(293, 305)+10, 305), new Vector3f(0, 0, 2), new Vector3f(1, 0.01f, 0.002f)));
+		
 		///////////
 		Camera camera = new Camera(player);
+		
+		List<GuiTexture> guis = new ArrayList<GuiTexture>();
+		GuiTexture gui = new GuiTexture(loader.loadTexture("thinmatrix"), new Vector2f(0.8f, -0.8f), new Vector2f(0.2f, 0.2f));
+		guis.add(gui);
+		
+		GuiRenderer guiRenderer = new GuiRenderer(loader);
 		
 		MasterRenderer renderer = new MasterRenderer();
 		
@@ -109,7 +123,7 @@ public class MainGameLoop {
 			//sync end
 			GLFW.glfwPollEvents();
 			//START//
-			//upadte??
+			//upadte
 			//entity.increasePosition(0, 0, 0);
 			//entity.increaseRotation(0, 0.5f, 0);
 			camera.move();
@@ -122,7 +136,8 @@ public class MainGameLoop {
 			for(Entity entity:entities) 
 				renderer.processEntity(entity);
 			
-			renderer.render(light, camera);
+			renderer.render(lights, camera);
+			guiRenderer.render(guis);
 			DisplayManager.updateDisplay();
 			//END//
 		}
