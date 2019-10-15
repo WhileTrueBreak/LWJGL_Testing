@@ -71,7 +71,7 @@ public class MainGameLoop {
 		System.out.println("Done!");
 		List<Entity> entities = new ArrayList<Entity>();
 		
-		for(int i = 0;i < 500;i++) {
+		for(int i = 0;i < 400;i++) {
 			float x = (float) (Math.random()*800);
 			float z = (float) (Math.random()*800);
 			entities.add(new Entity(tree1, new Vector3f(x, terrain1.getHeightOffTerrain(x, z), z), 0, (float) Math.random()*360, 0, 3));
@@ -82,7 +82,7 @@ public class MainGameLoop {
 			z = (float) (Math.random()*800);
 			entities.add(new Entity(fern, (int)(Math.random()*4), new Vector3f(x, terrain1.getHeightOffTerrain(x, z), z), 0, (float) Math.random()*360, 0, 0.6f));
 		}
-		for(int i = 0;i < 4500;i++) {
+		for(int i = 0;i < 400;i++) {
 			float x = (float) (Math.random()*800);
 			float z = (float) (Math.random()*800);
 			entities.add(new Entity(fern, (int)(Math.random()*4), new Vector3f(x, terrain1.getHeightOffTerrain(x, z), z), 0, (float) Math.random()*360, 0, 0.6f));
@@ -92,12 +92,13 @@ public class MainGameLoop {
 		Player player = new Player(person, new Vector3f(100, 0, 50), 0, 0, 0, 1);
 		
 		List<Light>lights = new ArrayList<Light>();
-		lights.add(new Light(new Vector3f(400, 1000, 400), new Vector3f(0.4f, 0.4f, 0.4f)));
+		List<Light>pointLights = new ArrayList<Light>();
+		Light sun = new Light(new Vector3f(400, 1000, 400), new Vector3f(1f, 1f, 1f));
 		
-		for(int i = 0;i < 15;i++) {
+		for(int i = 0;i < 160;i++) {
 			float x = (float) (Math.random()*800);
 			float z = (float) (Math.random()*800);
-			lights.add(new Light(new Vector3f(x, terrain1.getHeightOffTerrain(x, z)+10, z), new Vector3f(2, 0, 0), new Vector3f(1, 0.01f, 0.002f)));
+			pointLights.add(new Light(new Vector3f(x, terrain1.getHeightOffTerrain(x, z)+10, z), new Vector3f(0, 2, 2), new Vector3f(1, 0.01f, 0.002f)));
 		}
 		
 		///////////
@@ -128,7 +129,15 @@ public class MainGameLoop {
 			GLFW.glfwPollEvents();
 			//START//
 			//update
-			//Collections.sort(lights, (l1, l2) -> {return (Vector3f.add(l1.getPosition(), l2.getPosition(), null).length() > 0)?-1:1;});
+			//update lights
+			lights = new ArrayList<Light>();
+			Collections.sort(pointLights, (l1, l2) -> {
+				float l1l = Vector3f.sub(l1.getPosition(), player.getPosition(), null).length();
+				float l2l = Vector3f.sub(l2.getPosition(), player.getPosition(), null).length();
+				return (l1l < l2l)?-1:((l1l > l2l)?1:0);
+				});
+			lights.add(0, sun);
+			lights.addAll(pointLights);
 			//entity.increasePosition(0, 0, 0);
 			//entity.increaseRotation(0, 0.5f, 0);
 			camera.move();
