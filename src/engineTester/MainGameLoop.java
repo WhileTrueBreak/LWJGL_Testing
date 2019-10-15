@@ -110,7 +110,7 @@ public class MainGameLoop {
 		
 		GuiRenderer guiRenderer = new GuiRenderer(loader);
 		
-		MasterRenderer renderer = new MasterRenderer();
+		MasterRenderer renderer = new MasterRenderer(loader);
 		
 		while (!GLFW.glfwWindowShouldClose(DisplayManager.window)) {
 			//sync start

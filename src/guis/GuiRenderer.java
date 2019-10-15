@@ -10,7 +10,7 @@ import org.lwjgl.util.vector.Matrix4f;
 
 import models.RawModel;
 import renderEngine.Loader;
-import toolBox.Maths;
+import toolbox.Maths;
 
 public class GuiRenderer {
 	
@@ -19,7 +19,7 @@ public class GuiRenderer {
 	
 	public GuiRenderer(Loader loader) {
 		float[] positions = {-1, 1, -1, -1, 1, 1, 1, -1};
-		quad = loader.loadToVAO(positions);
+		quad = loader.loadToVAO(positions, 2);
 		shader = new GuiShader();
 	}
 	
